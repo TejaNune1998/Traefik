@@ -79,7 +79,7 @@ Traefik = Reverse Proxy + Auto SSL + Smart Routing
 ---
 ### Prerequisites
 * [[Self_Hosted_services/Docker_Installation|Docker]] installed system.
-* [[/Self_Hosted_Services/DNS_Stack/DNS_With_Pihole_&_Unbound|PiHole]]
+* [[https://github.com/TejaNune1998/DNS_Stack|PiHole]]
 * Availed domain from domain provider (cloudflare) 
 ----
 ### Download docker-compose.yml
