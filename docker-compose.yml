@@ -1,0 +1,67 @@
+services:
+  traefik:
+    image: traefik:v3.6.9
+    container_name: traefik
+    restart: unless-stopped
+    command:
+      - "--metrics.prometheus=true"
+    networks:
+      - proxy
+      - ph_bridge
+    dns:
+      - 10.1.0.16
+      - 10.1.0.17 
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080" 
+    environment:
+      CF_DNS_API_TOKEN_FILE: /run/secrets/cf_api_token
+      TRAEFIK_DASHBOARD_CREDENTIALS: ${TRAEFIK_DASHBOARD_CREDENTIALS}
+      TZ: Asia/Kolkata
+    secrets:
+      - cf_api_token
+    env_file: .env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /opt/docker_files/traefik/config/traefik.yml:/traefik.yml:ro
+      - /opt/docker_files/traefik/config/acme.json:/acme.json
+      - /opt/docker_files/traefik/config/guard_acme.json:/guard_acme.json
+      - /opt/docker_files/traefik/config/config.yml:/config.yml:ro
+    labels:
+      - "traefik.enable=true"
+
+      # Dashboard HTTP router (redirects to HTTPS)
+      - "traefik.http.routers.traefik.entrypoints=http"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.yourdomain.com`)"
+      - "traefik.http.routers.traefik.middlewares=redirect-to-https"
+
+      # Dashboard HTTPS router
+      - "traefik.http.routers.traefik-secure.entrypoints=https"
+      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.yourdomain.com`)"
+      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
+      - "traefik.http.routers.traefik-secure.tls=true"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
+      
+      # Domains to request certs for
+      - "traefik.http.routers.traefik-secure.tls.domains[0].main=yourdomain.com"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.yourdomain.com"
+      - "traefik.http.routers.traefik-secure.tls.domains[1].main=traefik.yourdomain.com"
+
+      - "traefik.http.routers.traefik-secure.service=api@internal"
+
+      # Middleware to redirect HTTP -> HTTPS
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+      # Middleware for basic auth
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
+networks:
+  proxy:
+    external: true
+  ph_bridge:
+    external: true
+secrets:
+  cf_api_token:
+    file: /opt/docker_files/traefik/cf_api_token.txt
+
