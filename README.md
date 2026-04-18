@@ -80,8 +80,8 @@ Traefik = Reverse Proxy + Automatic TLS + Dynamic Routing
 
 ---
 ### Prerequisites
-* A system with [[Docker_Installation|Docker]] installed.
-* [[/HomeLab-Self_Hosted_Services/DNS_Stack/DNS_With_Pihole_&_Unbound|Pi-Hole]]
+* A system with Docker installed.
+* Pi-Hole
 * A registered domain from a provider (e.g., Cloudflare)
 ----
 ### Download docker-compose.yml
