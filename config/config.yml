@@ -1,0 +1,83 @@
+http:
+  routers:
+    proxmox:
+      entryPoints:
+        - "https"
+      rule: "Host(`proxinator.yourdomian.com`)"
+      middlewares:
+        - default-headers
+      tls:
+        certresolver: cloudflare
+      service: proxmox
+
+    truenas:
+      entryPoints:
+        - "https"
+      rule: "Host(`storinator.yourdomian.com`)"
+      middlewares:
+        - default-headers
+      tls:
+        certresolver: cloudflare
+      service: truenas
+
+    rbpi5-pi-hole:
+      entryPoints:
+        - "https"
+      rule: "Host(`rbpi5-pi-hole.yourdomian.com`)"
+      middlewares:
+        - default-headers
+      tls:
+        certresolver: cloudflare
+      service: rbpi5-pi-hole
+
+    pve-pi-hole:
+      entryPoints:
+        - "https"
+      rule: "Host(`pve-pi-hole.yourdomian.com`)"
+      middlewares:
+        - default-headers
+      tls:
+        certresolver: cloudflare
+      service: pve-pi-hole
+
+  services:
+    proxmox:
+      loadBalancer:
+        servers:
+          - url: "https://10.1.0.xx:8006"
+        passHostHeader: true
+
+    truenas:
+      loadBalancer:
+        servers:
+          - url: "http://10.1.0.xx"
+        passHostHeader: true
+        
+    rbpi5-pi-hole:
+      loadBalancer:
+        servers:
+          - url: "http://10.xx.0.xx"
+        passHostHeader: true
+
+    pve-pi-hole:
+      loadBalancer:
+        servers:
+          - url: "http://10.x.0.xx"
+        passHostHeader: true
+
+
+  middlewares:
+    default-headers:
+      headers:
+        frameDeny: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 15552000
+        customFrameOptionsValue: SAMEORIGIN
+        customRequestHeaders:
+          X-Forwarded-Proto: https
+
+
