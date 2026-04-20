@@ -138,7 +138,7 @@ dns:
 - "traefik.http.routers.traefik.rule=Host(`traefik.yourdomain.com`)"
 - "traefik.http.routers.traefik-secure.tls.domains[0].main=yourdomain.com"
 - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.yourdomain.com"
-- "traefik.http.routers.traefik-secure.tls.domains[1].main=traefik.miniverse.com.co"  
+- "traefik.http.routers.traefik-secure.tls.domains[1].main=traefik.yourdomain.com.co"  
 ```
 
 ----
