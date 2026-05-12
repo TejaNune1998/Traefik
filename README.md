@@ -100,7 +100,8 @@ git clone https://github.com/TejaNune1998/Traefik.git
 │   ├── acme.json
 │   ├── config.yml
 │   └── traefik.yml
-└── docker-compose.yml
+├── docker-compose.yml
+└── .env
 ```
 
 ----
