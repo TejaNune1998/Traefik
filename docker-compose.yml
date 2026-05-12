@@ -56,6 +56,14 @@ services:
 
       # Middleware for basic auth
       - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
+      
+      - "traefik.http.middlewares.traefik.headers.accesscontrolallowmethods=GET,PUT,POST,HEAD,DELETE"
+      - "traefik.http.middlewares.traefik.headers.accesscontrolallowheaders=accept,authorization,content-type,origin,referer"
+      - "traefik.http.middlewares.traefik.headers.accesscontrolalloworiginlist=app://obsidian.md,capacitor://localhost,http://localhost"
+      - "traefik.http.middlewares.traefik.headers.accesscontrolmaxage=3600"
+      - "traefik.http.middlewares.traefik.headers.addvaryheader=true"
+      - "traefik.http.middlewares.traefik.headers.accessControlAllowCredentials=true"
+
 networks:
   proxy:
     external: true
